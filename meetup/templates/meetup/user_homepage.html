@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile</title>
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <style>
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+.column {
+  float: left;
+  width: 33.3%;
+  margin-bottom: 16px;
+  padding: 0 8px;
+}
+
+@media screen and (max-width: 650px) {
+  .column {
+    width: 100%;
+    display: block;
+  }
+}
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    padding: 5px;
+}
+
+.container {
+  padding: 0 16px;
+}
+
+.container::after, .row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.title {
+  color: grey;
+}
+
+.button {
+  border: none;
+  outline: 0;
+  display: inline-block;
+  padding: 8px;
+  color: white;
+  background-color: #4CAF50;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+}
+
+a{
+    color: #ffffff;
+}
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  padding-top: 60px;
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button (x) */
+.close {
+  position: absolute;
+  right: 25px;
+  top: 0;
+  color: #000;
+  font-size: 35px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: red;
+  cursor: pointer;
+}
+
+/* Add Zoom Animation */
+.animate {
+  -webkit-animation: animatezoom 0.6s;
+  animation: animatezoom 0.6s
+}
+
+@-webkit-keyframes animatezoom {
+  from {-webkit-transform: scale(0)}
+  to {-webkit-transform: scale(1)}
+}
+
+@keyframes animatezoom {
+  from {transform: scale(0)}
+  to {transform: scale(1)}
+}
+
+/* Change styles for span and cancel button on extra small screens */
+@media screen and (max-width: 300px) {
+  span.psw {
+     display: block;
+     float: none;
+  }
+  .cancelbtn {
+     width: 100%;
+  }
+}
+
+.button:hover {
+  background-color: #555;
+}
+
+</style>
+
+
+
+</head>
+<body>
+
+
+<nav class="navbar navbar-default sticky-top sticky" style="background-color: #4CAF50">
+      <nav class="container">
+{% if user.is_authenticated %}
+              <ul class="nav navbar-nav navbar-right">
+                <li><a class="navbar-link" href="{% url 'meetup:user_logout' %}">Logout</a></li>
+{#              <li><a class="navbar-link" href="{% url 'meetup:user_profile' user %}"><img style="border-radius: 50%" src="{{ profile.profile_pic.url }}" alt="profile-pic" width="30px" height="30px"  ></a></li>#}
+              </ul>
+
+          {% else %}
+              <ul class="nav navbar-nav">
+            <li><a class="navbar-link" href="{% url 'meetup:register' %}">Register</a></li>
+            <li><a class="navbar-link" href="{% url 'meetup:user_login' %}">Login</a></li>
+
+          {% endif %}
+      </ul>
+          </nav>
+      </nav>
+    {% if user.is_authenticated %}
+
+        <br>
+        <div class="container">
+        <div class="well well-lg">
+        <h1>Groups you might like</h1>
+        </div>
+        <div class="row">
+        {% for group in groups %}
+
+            <div class="column">
+    <div class="card" style="text-align: center">
+        <div style="display: inline-block">
+      <img src="{{ group.photo.url }}" alt="bla" style="width:100%">
+            </div>
+      <div class="container">
+        <h2><a style="color: #4CAF50" href = "{% url 'meetup:group_details' group.group_id %}">{{ group.name }}</a></h2>
+
+        <p class="title">{{ group.creator.name }}</p>
+        <p>{{ group.category.interest }}</p>
+        <p>{{ group.description }}</p>
+        <form method="post" action="">{% csrf_token %}<button class="button" name="add" value="{{ group.group_id }}">Add Me</button></form>
+      </div>
+    </div>
+  </div>
+
+        {% endfor %}
+        </div>
+        </div>
+    {% endif %}
+
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+{% extends 'meetup/base.html' %}
+{% block body_block %}
+<div class="container">
+<h1 align="center">Homepage</h1>
+{% if request.user.is_authenticated%}
+    <h5>Hi {{ request.user.email }}</h5>
+    {% if user.is_host %}
+        <div class="container">
+            <h6>You are host</h6>
+            <br>
+            Click
+            <a href="{% url 'meetup:create_group_view' %}">here</a> to create a group
+        <br>
+        Your Groups:
+        <ul type="None">
+        {% for group in groups %}
+            <li><a href="{% url 'meetup:group_details' group.group_id %}">{{ group.name }}</a></li>
+        {% endfor %}
+        </ul>
+        </div>
+        {% else %}
+        <h6>You are not a host</h6>
+
+
+
+    {% endif %}
+
+
+{% endif %}
+</div>
+{% endblock %}
+</body>
+</html>
