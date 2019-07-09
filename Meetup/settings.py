@@ -110,9 +110,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = 'meetup.User'
 
-LOGIN_REDIRECT_URL = 'homeview'
+LOGIN_REDIRECT_URL = 'meetup:homeview'
 
-LOGOUT_REDIRECT_URL = 'homeview'
+LOGOUT_REDIRECT_URL = 'meetup:homeview'
 
 
 # Internationalization

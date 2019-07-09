@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from meetup.forms import RegisterForm, LoginForm, GroupForm, MeetupForm
-from meetup.models import Group, GroupMemberDetails, Meetup
+from meetup.models import Group, GroupMemberDetails, Meetup, MeetupMemberDetails
 
 
 def homeview(request):
@@ -99,6 +99,10 @@ def create_meetup_view(request,group_id_meetup):
         return render(request, 'meetup/meetupform.html',{'form':form})
 
 def meetup_view(request,meetup_id):
+    if request.POST and 'join' in request.POST:
+        meetup_id = request.POST['join']
+        MeetupMemberDetails(meetup = Meetup.objects.get(meetup_id = meetup_id), user=request.user).save()
+        return redirect('meetup:homeview')
     meetup = Meetup.objects.get(meetup_id = meetup_id)
     return render(request, 'meetup/meetup_details.html',{'meetup':meetup})
 
@@ -109,3 +113,5 @@ def group_unsub_view(request,group_id):
 def group_delete_view(request,group_id):
     Group.objects.get(group_id=group_id).delete()
     return redirect('meetup:homeview')
+
+

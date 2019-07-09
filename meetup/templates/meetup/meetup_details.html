@@ -14,6 +14,9 @@
         <li>Group: {{ meetup.group }}</li>
         <li>Description: {{ meetup.description }}</li>
         <li>Timestamp: {{ meetup.timestamp }}</li>
+        {% if not user.is_host %}
+            <form method="post" action="">{% csrf_token %}<button class="button" name="join" value="{{ meetup.meetup_id }}">Join</button></form>
+        {% endif %}
         </ul>
 </div>
 
