@@ -17,18 +17,31 @@
 {% if request.user.is_authenticated%}
     <h5>Hi {{ request.user.email }}</h5>
     {% if user.is_host %}
-        <div class="container">
-            <h6>You are host</h6>
-            <br>
-            Click
-            <a href="{% url 'meetup:create_group_view' %}">here</a> to create a group
-        <br>
-        Your Groups:
-        <ul type="None">
+         <div class="container">
+        <div class="well well-lg">
+        <h1>Your Groups: </h1>
+        </div>
+        <div class="row">
         {% for group in groups %}
-            <li><a href="{% url 'meetup:group_details' group.group_id %}">{{ group.name }}</a></li>
+
+            <div class="column">
+    <div class="card" style="text-align: center">
+        <div style="display: inline-block">
+      <img src="{{ group.photo.url }}" alt="profile-pic" style="width: 100%">
+            </div>
+      <div class="container">
+        <h2><a style="color: #4CAF50" href = "{% url 'meetup:group_details' group.group_id %}">{{ group.name }}</a></h2>
+
+        <p class="title">{{ group.creator.name }}</p>
+        <p>{{ group.category.interest }}</p>
+        <p>{{ group.description }}</p>
+        <a href="{% url 'meetup:group_delete_view' group.group_id %}" class="btn btn-danger">Delete Group</a>
+      </div>
+    </div>
+  </div>
+
         {% endfor %}
-        </ul>
+        </div>
         </div>
         {% else %}
         <h6>You are not a host</h6>

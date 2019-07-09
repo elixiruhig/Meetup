@@ -3,8 +3,8 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 
 # Create your views here.
-from meetup.forms import RegisterForm, LoginForm, GroupForm
-from meetup.models import Group, GroupMemberDetails
+from meetup.forms import RegisterForm, LoginForm, GroupForm, MeetupForm
+from meetup.models import Group, GroupMemberDetails, Meetup
 
 
 def homeview(request):
@@ -29,7 +29,11 @@ def homeview(request):
             for group in Group.objects.exclude(group_id__in=ids_to_exclude):
                 if group.category.interest in interests:
                     groups.append(group)
-            return render(request, 'meetup/user_homepage.html',{'groups':groups})
+            gmds = GroupMemberDetails.objects.filter(user=request.user)
+            member_groups= []
+            for gmd in gmds:
+                member_groups.append(gmd.group)
+            return render(request, 'meetup/user_homepage.html',{'groups':groups,'member_groups': member_groups})
     else:
         return redirect('/user_login')
 
@@ -76,4 +80,32 @@ def create_group_view(request):
 
 def group_details(request,group_id):
     group = Group.objects.get(group_id=group_id)
-    return render(request, 'meetup/group_details.html',{'group':group})
+    meetups = Meetup.objects.filter(group = group)
+    return render(request, 'meetup/group_details.html',{'group':group,'meetups':meetups})
+
+def create_meetup_view(request,group_id_meetup):
+    if request.POST:
+        form = MeetupForm(request.POST)
+        if form.is_valid():
+            f = form.save(commit=False)
+            f.group = Group.objects.get(group_id = group_id_meetup)
+            f.host = request.user
+            f.save()
+            return render(request, 'meetup/host_homepage.html')
+        else:
+            return HttpResponse("{}".format(form.errors))
+    else:
+        form = MeetupForm()
+        return render(request, 'meetup/meetupform.html',{'form':form})
+
+def meetup_view(request,meetup_id):
+    meetup = Meetup.objects.get(meetup_id = meetup_id)
+    return render(request, 'meetup/meetup_details.html',{'meetup':meetup})
+
+def group_unsub_view(request,group_id):
+    GroupMemberDetails.objects.get(group = Group.objects.get(group_id=group_id)).delete()
+    return redirect('meetup:homeview')
+
+def group_delete_view(request,group_id):
+    Group.objects.get(group_id=group_id).delete()
+    return redirect('meetup:homeview')

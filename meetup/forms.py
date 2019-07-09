@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.db.models import Q
 
-from meetup.models import User, Group
+from meetup.models import User, Group, Meetup
 
 
 class RegisterForm(UserCreationForm):
@@ -66,3 +66,9 @@ class GroupForm(forms.ModelForm):
     class Meta:
         model = Group
         fields = ('name','description','category','location','photo')
+
+class MeetupForm(forms.ModelForm):
+
+    class Meta:
+        model = Meetup
+        fields = ('name', 'description')

@@ -190,6 +190,34 @@ a{
         {% endfor %}
         </div>
         </div>
+
+
+         <div class="container">
+        <div class="well well-lg">
+        <h1>Your Groups: </h1>
+        </div>
+        <div class="row">
+        {% for group in member_groups %}
+
+            <div class="column">
+    <div class="card" style="text-align: center">
+        <div style="display: inline-block">
+      <img src="{{ group.photo.url }}" alt="profile-pic" style="width:100%">
+            </div>
+      <div class="container">
+        <h2><a style="color: #4CAF50" href = "{% url 'meetup:group_details' group.group_id %}">{{ group.name }}</a></h2>
+
+        <p class="title">{{ group.creator.name }}</p>
+        <p>{{ group.category.interest }}</p>
+        <p>{{ group.description }}</p>
+        <a class="btn btn-danger" href="{% url 'meetup:group_unsub_view' group.group_id %}">Unsubscribe</a>
+      </div>
+    </div>
+  </div>
+
+        {% endfor %}
+        </div>
+        </div>
     {% endif %}
 
 

@@ -11,7 +11,7 @@
 </head>
 <body>
 <div class="container">
-    <div class="container" style="border: solid black">
+    <div class="container" align="center" style="border: solid black">
     <ul type="None">
 
         <li>Name: {{ group.name }}</li>
@@ -19,8 +19,21 @@
         <li>Category: {{ group.category }}</li>
         <li>Description: {{ group.description }}</li>
         <li>Location: {{ group.location }}</li>
+        <li><img src="{{ group.photo.url }}" alt="photo" width="400" height="200"></li>
+    <br>
+    Meetups:
+        {% for meetup in meetups %}
+            <li><a href="{% url 'meetup:meetup_view' meetup.meetup_id %}">{{ meetup.name }}</a></li>
+        {% endfor %}
+    {% if user.is_host %}
+        <li><a href="{% url 'meetup:create_meetup_view' group.group_id %}">Add Meetup</a></li>
+    {% endif %}
     </ul>
+
+        <br>
+        <br>
         </div>
+
 </div>
 </body>
 </html>

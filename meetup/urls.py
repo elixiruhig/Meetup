@@ -27,6 +27,10 @@ urlpatterns = [
     url(r'^user_logout/$', views.user_logout, name='user_logout'),
     url(r'^register/$', views.register, name='register'),
     url(r'^create_group/$', views.create_group_view, name='create_group_view'),
+    url(r'^(?P<group_id_meetup>[-\w]+)/create_meetup/$', views.create_meetup_view, name='create_meetup_view'),
+    url(r'^meetup=(?P<meetup_id>[-\w]+)/$', views.meetup_view, name='meetup_view'),
+    url(r'^unsub=(?P<group_id>[-\w]+)/$', views.group_unsub_view, name='group_unsub_view'),
+    url(r'^delete=(?P<group_id>[-\w]+)/$', views.group_delete_view, name='group_delete_view'),
 
 
 ]
