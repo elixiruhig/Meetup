@@ -4,14 +4,26 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from meetup.forms import RegisterForm, LoginForm, GroupForm, MeetupForm
-from meetup.models import Group, GroupMemberDetails, Meetup, MeetupMemberDetails
+from meetup.models import Group, GroupMemberDetails, Meetup, MeetupMemberDetails, User, Interest
 
 
 def homeview(request):
     if request.user.is_authenticated:
         if request.user.host:
             groups = Group.objects.filter(creator=request.user)
-            return render(request, 'meetup/host_homepage.html',{'groups':groups})
+            interests = []
+
+            for interest in request.user.interests:
+                interests.append(interest)
+
+
+            gmds = GroupMemberDetails.objects.filter(user=request.user)
+            member_groups = []
+            for gmd in gmds:
+                member_groups.append(gmd.group)
+            meetups = Meetup.objects.filter(group__in=member_groups).order_by('-timestamp')
+
+            return render(request, 'meetup/host_homepage.html',{'groups':groups,'member_groups': member_groups,'meetups':meetups})
         elif not request.user.host:
             if request.method == 'POST':
                 group = Group.objects.get(group_id=request.POST['add'])
@@ -33,7 +45,8 @@ def homeview(request):
             member_groups= []
             for gmd in gmds:
                 member_groups.append(gmd.group)
-            return render(request, 'meetup/user_homepage.html',{'groups':groups,'member_groups': member_groups})
+            meetups = Meetup.objects.filter(group__in=member_groups).order_by('-timestamp')
+            return render(request, 'meetup/user_homepage.html',{'groups':groups,'member_groups': member_groups,'meetups':meetups})
     else:
         return redirect('/user_login')
 
@@ -101,10 +114,14 @@ def create_meetup_view(request,group_id_meetup):
 def meetup_view(request,meetup_id):
     if request.POST and 'join' in request.POST:
         meetup_id = request.POST['join']
-        MeetupMemberDetails(meetup = Meetup.objects.get(meetup_id = meetup_id), user=request.user).save()
+        MeetupMemberDetails.objects.get_or_create(meetup = Meetup.objects.get(meetup_id = meetup_id), user=request.user).save()
         return redirect('meetup:homeview')
     meetup = Meetup.objects.get(meetup_id = meetup_id)
-    return render(request, 'meetup/meetup_details.html',{'meetup':meetup})
+    mids = MeetupMemberDetails.objects.filter(meetup = meetup)
+    attendees = []
+    for mid in mids:
+        attendees.append(User.objects.get(user_id = mid.user.user_id))
+    return render(request, 'meetup/meetup_details.html',{'meetup':meetup,'attendees':attendees})
 
 def group_unsub_view(request,group_id):
     GroupMemberDetails.objects.get(group = Group.objects.get(group_id=group_id)).delete()
@@ -114,4 +131,10 @@ def group_delete_view(request,group_id):
     Group.objects.get(group_id=group_id).delete()
     return redirect('meetup:homeview')
 
+def user_profile_view(request,user_id):
+    user = User.objects.get(user_id=user_id)
+    return render(request, 'meetup/user_profile.html',{'user':user})
 
+def interest_view(request, interest):
+    groups = Group.objects.filter(category=Interest.objects.get(interest = interest))
+    return render(request, 'meetup/user_homepage.html',{'groups':groups})

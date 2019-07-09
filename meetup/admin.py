@@ -30,7 +30,7 @@ class user_admin(UserAdmin):
 
     add_form = RegisterForm
 
-    list_display = ('email', 'user_id', 'host', 'staff','admin')
+    list_display = ('email', 'user_id', 'host', 'staff','admin','photo')
     search_fields = ('email', 'user_id', 'host', 'staff','admin')
     list_filter = ('email', 'user_id', 'host')
     ordering = ('email',)
@@ -38,7 +38,7 @@ class user_admin(UserAdmin):
 
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('name','host','staff','interests')}),
+        ('Personal info', {'fields': ('name','host','staff','interests','photo')}),
         ('Permissions', {'fields': ('admin',)}),
     )
 

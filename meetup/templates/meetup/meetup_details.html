@@ -3,22 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ meetup.name }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
+
+<style>
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+
+.flip-card {
+  background-color: transparent;
+  width: 100px;
+  height: 100px;
+  perspective: 1000px;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.flip-card-front {
+
+  color: black;
+}
+
+.flip-card-back {
+  background-color: #4CAF50;
+  color: white;
+  transform: rotateY(180deg);
+}
+
+.chip {
+  display: inline-block;
+  padding: 0 25px;
+  height: 50px;
+  font-size: 16px;
+  line-height: 50px;
+  border-radius: 25px;
+  background-color: #f1f1f1;
+}
+
+.chip img {
+  float: left;
+  margin: 0 10px 0 -25px;
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+}
+ul{
+    padding: 2%;
+}
+li{
+    padding: 2px;
+}
+
+</style>
 <body>
 
 <div class="container" align="center">
     <ul type="None">
-    <li>Name: {{ meetup.name }}</li>
-    <li>Meetup-id: {{ meetup.meetup_id }}</li>
-        <li>Host: {{ meetup.host }}</li>
-        <li>Group: {{ meetup.group }}</li>
+    <li><h2>Name: {{ meetup.name }}</h2></li>
+
+        <li>Host: <a href="{% url 'meetup:user_profile_view' meetup.host.user_id %}">{{ meetup.host }}</a></li>
+        <li>Group: <a href="{% url 'meetup:group_details' meetup.group.group_id %}">{{ meetup.group }}</a></li>
         <li>Description: {{ meetup.description }}</li>
         <li>Timestamp: {{ meetup.timestamp }}</li>
         {% if not user.is_host %}
-            <form method="post" action="">{% csrf_token %}<button class="button" name="join" value="{{ meetup.meetup_id }}">Join</button></form>
+            <form method="post" action="">{% csrf_token %}<button class="btn btn-info" name="join" value="{{ meetup.meetup_id }}">Join</button></form>
         {% endif %}
+
         </ul>
+    Attendees:
+<br>
+
+
+
+
+
+<ul type="None">
+    {% for attendee in attendees %}
+<div class="flip-card">
+  <div class="flip-card-inner">
+    <div class="flip-card-front">
+  <img src="{{ attendee.photo.url }}" alt="Person" width="100px" height="100px" style="border-radius: 50%">
+
+    </div>
+    <div class="flip-card-back">
+      <h6>{{ attendee.name }}</h6>
+
+      <p style="font-size: small"><a style="color: white" href="{% url 'meetup:user_profile_view' attendee.user_id %}">View Profile</a></p>
+    </div>
+  </div>
 </div>
+    {% endfor %}
+
 
 </body>
 </html>
+
+

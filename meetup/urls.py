@@ -31,6 +31,8 @@ urlpatterns = [
     url(r'^meetup=(?P<meetup_id>[-\w]+)/$', views.meetup_view, name='meetup_view'),
     url(r'^unsub=(?P<group_id>[-\w]+)/$', views.group_unsub_view, name='group_unsub_view'),
     url(r'^delete=(?P<group_id>[-\w]+)/$', views.group_delete_view, name='group_delete_view'),
+    url(r'^profile=(?P<user_id>[-\w]+)/$', views.user_profile_view, name='user_profile_view'),
+    url(r'^interest=(?P<interest>[-\w]+)/$', views.interest_view, name='interest_view'),
 
 
 ]

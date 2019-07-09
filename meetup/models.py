@@ -63,6 +63,7 @@ class User(AbstractBaseUser):
     interests = MultiSelectField(choices=MY_INTERESTS)
     staff = models.BooleanField(default=False)
     admin = models.BooleanField(default=False)
+    photo = models.ImageField(upload_to="group_photos", null=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

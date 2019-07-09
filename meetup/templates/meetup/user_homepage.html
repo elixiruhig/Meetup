@@ -218,6 +218,40 @@ a{
         {% endfor %}
         </div>
         </div>
+
+
+
+        </div>
+        </div>
+
+
+         <div class="container">
+        <div class="well well-lg">
+        <h1>Upcoming meetups:: </h1>
+        </div>
+        <div class="row">
+        {% for meetup in meetups %}
+
+            <div class="column">
+    <div class="card" style="text-align: center">
+        <div style="display: inline-block">
+      <img src="{{ group.photo.url }}" alt="profile-pic" style="width:100%">
+            </div>
+      <div class="container">
+        <h2><a style="color: #4CAF50" href = "{% url 'meetup:meetup_view' meetup.meetup_id %}">{{ meetup.name }}</a></h2>
+
+        <p class="title">{{ meetup.host.name }}</p>
+
+        <p>{{ meetup.description }}</p>
+
+      </div>
+    </div>
+  </div>
+
+        {% endfor %}
+        </div>
+        </div>
+
     {% endif %}
 
 
