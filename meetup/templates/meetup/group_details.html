@@ -8,32 +8,219 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <style>
+      body {
+  font-family: Arial;
+}
+
+.coupon {
+  border: 5px dotted #bbb;
+  width: 80%;
+  border-radius: 15px;
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+.container {
+  padding: 2px 16px;
+  background-color: #f1f1f1;
+}
+
+.promo {
+  background: #ccc;
+  padding: 3px;
+}
+
+.expire {
+  color: red;
+}
+
+        .flip-card {
+  background-color: transparent;
+  width: 75px;
+  height: 75px;
+  perspective: 1000px;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.flip-card-front {
+
+  color: black;
+}
+
+.flip-card-back {
+  background-color: #333333;
+  color: white;
+  transform: rotateY(180deg);
+    border-radius: 50%;
+}
+
+.chip {
+  display: inline-block;
+  padding: 0 25px;
+  height: 50px;
+  font-size: 16px;
+  line-height: 50px;
+  border-radius: 25px;
+  background-color: #f1f1f1;
+}
+
+.chip img {
+  float: left;
+  margin: 0 10px 0 -25px;
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+}
+    </style>
 </head>
 <body>
-<div class="container">
-    <div class="container" align="center" style="border: solid black">
-    <ul type="None">
 
-        <li>Name: {{ group.name }}</li>
-        <li>Creator: {{ group.creator }}</li>
-        <li>Category: {{ group.category }}</li>
-        <li>Description: {{ group.description }}</li>
-        <li>Location: {{ group.location }}</li>
-        <li><img src="{{ group.photo.url }}" alt="photo" width="400" height="200"></li>
-    <br>
-    Meetups:
-        {% for meetup in meetups %}
-            <li><a href="{% url 'meetup:meetup_view' meetup.meetup_id %}">{{ meetup.name }}</a></li>
-        {% endfor %}
-    {% if user.is_host %}
-        <li><a href="{% url 'meetup:create_meetup_view' group.group_id %}">Add Meetup</a></li>
-    {% endif %}
-    </ul>
+<div class="coupon" align="center">
+  <div class="container">
+    <h3>{{ group.name }}</h3>
+  </div>
+  <img src="{{ group.photo.url }}" alt="Avatar" style="width:100%;">
+  <div class="container" style="background-color:white">
+    <h3><b>Category: {{ group.category.interest }}</b></h3>
 
-        <br>
-        <br>
-        </div>
+      <h3><b>Location: {{ group.location }}</b></h3>
+
+    <p><b>Description:</b> {{ group.description }}</p>
+
+      <h3><b>Creator</b></h3>
+
+      <div class="flip-card">
+  <div class="flip-card-inner">
+    <div class="flip-card-front">
+  <img src="{{ group.creator.photo.url }}" alt="Person" width="75px" height="75px" style="border-radius: 50%">
+
+    </div>
+    <div class="flip-card-back">
+
+      <h6 style="font-size: small">{{ group.creator.name }}</h6>
+
+      <p style="font-size: small"><a style="color: white" href="{% url 'meetup:user_profile_view' group.creator.user_id %}">View Profile</a></p>
+    </div>
+  </div>
+</div>
+ <h3>Members</h3>
+      {% for attendee in attendees %}
+<div class="flip-card">
+  <div class="flip-card-inner">
+    <div class="flip-card-front">
+  <img src="{{ attendee.photo.url }}" alt="Person" width="75px" height="75px" style="border-radius: 50%">
+
+    </div>
+    <div class="flip-card-back">
+      <h6>{{ attendee.name }}</h6>
+
+      <p style="font-size: small"><a style="color: white" href="{% url 'meetup:user_profile_view' attendee.user_id %}">View Profile</a></p>
+    </div>
+  </div>
+</div>
+    {% endfor %}
+
+
+
+  </div>
 
 </div>
+<br>
+{% if meetups %}
+<div class="container" align="center">
+        <div class="well well-lg" >
+        <h3>Meetups: </h3>
+        </div>
+        <div class="row">
+        {% for meetup in meetups %}
+
+            <div class="column" style="margin: 5px">
+    <div class="card" style="text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px; margin: 5px">
+        <div style="display: inline-block">
+      <img src="{{ meetup.photo.url }}" alt="profile-pic" style="width:300px; height: 300px; border-top-left-radius: 10px; border-top-right-radius: 10px">
+            </div>
+      <div class="container">
+        <h2><a style="color: #4CAF50" href = "{% url 'meetup:meetup_view' meetup.meetup_id %}">{{ meetup.name }}</a></h2>
+
+        <p class="title">{{ meetup.host.name }}</p>
+
+        <p>{{ meetup.description }}</p>
+
+      </div>
+    </div>
+  </div>
+
+        {% endfor %}
+        </div>
+        </div>
+{% endif %}
+
+{% if user.is_host %}
+    <br>
+    <a style="display: block; margin-left: 40%; margin-right: 40%; margin-bottom: 5px" class="btn btn-success" href="{% url 'meetup:create_meetup_view' group.group_id %}">Create Meetup</a>
+{% endif %}
+
+
 </body>
 </html>
+
+
+
+
+
+
+
+{#<div class="coupon">#}
+{#  <div class="container">#}
+{#    <h3>Company Logo</h3>#}
+{#  </div>#}
+{#  <img src="/w3images/hamburger.jpg" alt="Avatar" style="width:100%;">#}
+{#  <div class="container" style="background-color:white">#}
+{#    <h2><b>20% OFF YOUR PURCHASE</b></h2>#}
+{#    <p>Lorem ipsum dolor sit amet, et nam pertinax gloriatur. Sea te minim soleat senserit, ex quo luptatum tacimates voluptatum, salutandi delicatissimi eam ea. In sed nullam laboramus appellantur, mei ei omnis dolorem mnesarchum.</p>#}
+{#  </div>#}
+{#  <div class="container">#}
+{#    <p>Use Promo Code: <span class="promo">BOH232</span></p>#}
+{#    <p class="expire">Expires: Jan 03, 2021</p>#}
+{#  </div>#}
+{#</div>#}
+{##}
+{##}
+{##}
+{##}
+{##}
+{#<li>Name: {{ group.name }}</li>#}
+{#        <li>Creator: {{ group.creator }}</li>#}
+{#        <li>Category: {{ group.category }}</li>#}
+{#        <li>Description: {{ group.description }}</li>#}
+{#        <li>Location: {{ group.location }}</li>#}
+{#        <li><img src="{{ group.photo.url }}" alt="photo" width="400" height="200"></li>#}
+{#    <br>#}
+{#    Meetups:#}
+{#        {% for meetup in meetups %}#}
+{#            <li><a href="{% url 'meetup:meetup_view' meetup.meetup_id %}">{{ meetup.name }}</a></li>#}
+{#        {% endfor %}#}
+{#    {% if user.is_host %}#}
+{#        <li><a href="{% url 'meetup:create_meetup_view' group.group_id %}">Add Meetup</a></li>#}
+{#    {% endif %}#}

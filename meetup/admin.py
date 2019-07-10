@@ -11,7 +11,7 @@ from meetup.models import *
 
 
 class group_admin(admin.ModelAdmin):
-    list_display = ('name','group_id','creator','category')
+    list_display = ('name','group_id','creator','category','photo')
     search_fields = ('name','group_id','creator','category')
     list_filter = ('name','group_id','creator','category')
     ordering = ('name',)
@@ -19,7 +19,7 @@ class group_admin(admin.ModelAdmin):
 admin.site.register(Group,group_admin)
 
 class meetup_admin(admin.ModelAdmin):
-    list_display = ('name','meetup_id','host','group')
+    list_display = ('name','meetup_id','host','group','photo','fee')
     search_fields = ('name','meetup_id','host','group')
     list_filter = ('name','meetup_id','host','group')
     ordering = ('name',)

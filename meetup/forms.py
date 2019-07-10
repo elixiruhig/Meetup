@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.db.models import Q
+from django.forms import TextInput
 
 from meetup.models import User, Group, Meetup
 
@@ -9,6 +10,18 @@ from meetup.models import User, Group, Meetup
 class RegisterForm(UserCreationForm):
     password1 = forms.CharField(label="Password",widget=forms.PasswordInput)
     password2 = forms.CharField(label="Confirm Password",widget=forms.PasswordInput)
+
+    name = forms.CharField(widget=TextInput(
+        attrs={
+            'class': 'form-control'
+        }
+    ))
+
+    email = forms.EmailField(label="Email", widget=forms.EmailInput(
+        attrs={
+            'class': 'form-control'
+        }
+    ))
 
     class Meta:
         model = get_user_model()
@@ -40,8 +53,16 @@ class RegisterForm(UserCreationForm):
             raise ValueError("Error in form")
 
 class LoginForm(forms.Form):
-    email = forms.EmailField(label="Email")
-    password = forms.CharField(widget=forms.PasswordInput,label="Password")
+    email = forms.EmailField(label="Email",widget=forms.EmailInput(
+        attrs={
+            'class':'form-control'
+        }
+    ))
+    password = forms.CharField(widget=forms.PasswordInput(
+        attrs={
+            'class':'form-control'
+        }
+    ),label="Password")
 
     def clean(self, *args, **kwargs):
         email = self.cleaned_data.get('email')
@@ -63,12 +84,43 @@ class LoginForm(forms.Form):
 
 class GroupForm(forms.ModelForm):
 
+    name = forms.CharField(widget=TextInput(
+        attrs={
+            'class':'form-control'
+        }
+    ))
+
+    description = forms.CharField(widget=TextInput(
+        attrs={
+            'class':'form-control'
+        }
+    ))
+
+    location = forms.CharField(widget=TextInput(
+        attrs={
+            'class': 'form-control'
+        }
+    ))
+
     class Meta:
         model = Group
         fields = ('name','description','category','location','photo')
 
 class MeetupForm(forms.ModelForm):
+    name = forms.CharField(widget=TextInput(
+        attrs={
+            'class': 'form-control'
+        }
+    ))
+
+    description = forms.CharField(widget=TextInput(
+        attrs={
+            'class': 'form-control'
+        }
+    ))
+
+
 
     class Meta:
         model = Meetup
-        fields = ('name', 'description')
+        fields = ('name', 'description','fee','photo')

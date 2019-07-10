@@ -12,7 +12,7 @@
     <style>
 .card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  max-width: 300px;
+  max-width: 500px;
   margin: auto;
   text-align: center;
   font-family: arial;
@@ -50,14 +50,16 @@ button:hover, a:hover {
 <body>
 
 <div class="card">
-  <img src="{{ user.photo.url }}" alt="John" style="width:100%">
-  <h1>John Doe</h1>
+  <img src="{{ user.photo.url }}" alt="John" style="height:100px; width: 100px; border-radius: 50%; display: block; margin-left: auto; margin-right: auto">
+  <h1>{{ user.name }}</h1>
   <p class="title">{{ user.name }}</p>
   <p>{{ user.email }}</p>
-  <p>{{ Interests }}</p>
+  <p><b>Interests</b></p>
   <div style="margin: 24px 0;">
     {% for interest in user.interests %}
+        <div class="well well-lg" style="background-color: #e0e0e0; padding: 5%; margin-right: 5%; margin-left: 5%">
       <p><a href="{% url 'meetup:interest_view' interest %}" class="button">{{ interest }}</a></p>
+        </div>
         <br>
       {% endfor %}
   </div>

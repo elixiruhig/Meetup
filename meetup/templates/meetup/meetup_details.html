@@ -21,6 +21,7 @@ body {
   width: 100px;
   height: 100px;
   perspective: 1000px;
+
 }
 
 .flip-card-inner {
@@ -50,7 +51,7 @@ body {
 }
 
 .flip-card-back {
-  background-color: #4CAF50;
+  background-color: #333333;
   color: white;
   transform: rotateY(180deg);
 }
@@ -82,45 +83,59 @@ li{
 </style>
 <body>
 
-<div class="container" align="center">
-    <ul type="None">
-    <li><h2>Name: {{ meetup.name }}</h2></li>
 
-        <li>Host: <a href="{% url 'meetup:user_profile_view' meetup.host.user_id %}">{{ meetup.host }}</a></li>
-        <li>Group: <a href="{% url 'meetup:group_details' meetup.group.group_id %}">{{ meetup.group }}</a></li>
-        <li>Description: {{ meetup.description }}</li>
-        <li>Timestamp: {{ meetup.timestamp }}</li>
-        {% if not user.is_host %}
+    <div class="well" style="background-color: #4CAF50; width: 100%" >
+        <h1 style="color: white; font-family: 'Century Schoolbook L'" align="center"><b>{{ meetup.name }}</b></h1>
+    <h5 align="left">Creator: <a href="{% url 'meetup:user_profile_view' meetup.host.user_id %}"><img src="{{ meetup.host.photo.url }}" width="40px" height="40px" style="border-radius: 50%" alt="profile-pic"></a> {{ meetup.host.name }}</h5>
+        <h5 align="left">Group: <a style="color: white" href="{% url 'meetup:group_details' meetup.group.group_id %}">{{ meetup.group.name }}</a></h5>
+        {% if meetup.fee == 0 %}
+            <h5 align="left">Free</h5>
+            {% else %}
+            <h5 align="left">Fee: {{ meetup.fee }}</h5>
+        {% endif %}
+    </div>
+
+<div class="container" align="center">
+        {% if not user.is_host and user not in attendees%}
             <form method="post" action="">{% csrf_token %}<button class="btn btn-info" name="join" value="{{ meetup.meetup_id }}">Join</button></form>
         {% endif %}
+        {% if user in attendees %}
+            <form method="post" action="">{% csrf_token %}<button class="btn btn-danger" name="cancel" value="{{ meetup.meetup_id }}">Cancel</button></form>
+        {% endif %}
 
-        </ul>
-    Attendees:
+
 <br>
 
+<div class="container">
 
+        <div class="well"><h4>Attendees</h4></div>
 
+        <div class="row well">
+        {% for attendee in attendees %}
 
+            <div class="column">
+    <div class="card" style="text-align: center; background-color: gainsboro">
+        <div style="display: inline-block">
+      <img src="{{ attendee.photo.url }}" alt="bla" style=" width: 200px; height: 200px; border-radius: 50%; margin: 5px">
+            </div>
+      <div class="container">
+        <h2><a style="color: #4CAF50" href = "{% url 'meetup:user_profile_view' attendee.user_id %}">{{ attendee.name }}</a></h2>
 
-<ul type="None">
-    {% for attendee in attendees %}
-<div class="flip-card">
-  <div class="flip-card-inner">
-    <div class="flip-card-front">
-  <img src="{{ attendee.photo.url }}" alt="Person" width="100px" height="100px" style="border-radius: 50%">
+        <p class="title">{{ attendee.email }}</p>
 
-    </div>
-    <div class="flip-card-back">
-      <h6>{{ attendee.name }}</h6>
-
-      <p style="font-size: small"><a style="color: white" href="{% url 'meetup:user_profile_view' attendee.user_id %}">View Profile</a></p>
+      </div>
     </div>
   </div>
-</div>
-    {% endfor %}
+
+        {% endfor %}
+        </div>
+        </div>
+
+
+
+
 
 
 </body>
 </html>
-
 

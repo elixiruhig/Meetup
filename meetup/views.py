@@ -83,8 +83,9 @@ def create_group_view(request):
         if form.is_valid():
             saved_form = form.save(commit=False)
             saved_form.creator = request.user
+            print(saved_form.photo)
             saved_form.save()
-            return render(request, 'meetup/host_homepage.html')
+            return redirect('meetup:homeview')
         else:
             return HttpResponse("{}".format(form.errors))
     else:
@@ -94,17 +95,26 @@ def create_group_view(request):
 def group_details(request,group_id):
     group = Group.objects.get(group_id=group_id)
     meetups = Meetup.objects.filter(group = group)
-    return render(request, 'meetup/group_details.html',{'group':group,'meetups':meetups})
+    a = GroupMemberDetails.objects.filter(group=group)
+    uidl = [u.user.user_id for u in a]
+    attendees = User.objects.filter(user_id__in=uidl)
+    return render(request, 'meetup/group_details.html',{'group':group,'meetups':meetups,'attendees':attendees})
 
 def create_meetup_view(request,group_id_meetup):
-    if request.POST:
-        form = MeetupForm(request.POST)
+    if request.method == 'POST':
+        form = MeetupForm(request.POST,request.FILES)
         if form.is_valid():
-            f = form.save(commit=False)
-            f.group = Group.objects.get(group_id = group_id_meetup)
-            f.host = request.user
-            f.save()
-            return render(request, 'meetup/host_homepage.html')
+            # f = form.save(commit=False)
+            # f.group = Group.objects.get(group_id = group_id_meetup)
+            # f.host = request.user
+            # print(f)
+            # #f.save()
+
+            saved_form = form.save(commit=False)
+            saved_form.host = request.user
+            saved_form.group = Group.objects.get(group_id=group_id_meetup)
+            saved_form.save()
+            return redirect('meetup:homeview')
         else:
             return HttpResponse("{}".format(form.errors))
     else:
@@ -114,7 +124,11 @@ def create_meetup_view(request,group_id_meetup):
 def meetup_view(request,meetup_id):
     if request.POST and 'join' in request.POST:
         meetup_id = request.POST['join']
-        MeetupMemberDetails.objects.get_or_create(meetup = Meetup.objects.get(meetup_id = meetup_id), user=request.user).save()
+        MeetupMemberDetails.objects.get_or_create(meetup = Meetup.objects.get(meetup_id = meetup_id), user=request.user)
+        return redirect('meetup:homeview')
+    if request.POST and 'cancel' in request.POST:
+        meetup_id = request.POST['cancel']
+        MeetupMemberDetails.objects.get(meetup = Meetup.objects.get(meetup_id = meetup_id)).delete()
         return redirect('meetup:homeview')
     meetup = Meetup.objects.get(meetup_id = meetup_id)
     mids = MeetupMemberDetails.objects.filter(meetup = meetup)

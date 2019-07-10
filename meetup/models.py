@@ -110,7 +110,7 @@ class Group(models.Model):
     description = models.TextField()
     category = models.ForeignKey(Interest,on_delete=models.CASCADE)
     location = models.CharField(max_length=55,blank=False, null=False)
-    photo = models.ImageField(upload_to="group_photos", null=True)
+    photo = models.ImageField(upload_to="group_photos", default='group_photos/film.jpg')
 
     def __str__(self):
         return self.name
@@ -119,6 +119,10 @@ class GroupMemberDetails(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     group = models.ForeignKey(Group,on_delete=models.CASCADE)
 
+    def __str__(self):
+        str = "{} {}".format(self.user.email,self.group.name)
+        return str
+
 class Meetup(models.Model):
     name = models.CharField(max_length=255,blank=False, null=False)
     meetup_id = models.UUIDField(unique=True, default=uuid.uuid4)
@@ -126,6 +130,8 @@ class Meetup(models.Model):
     group = models.ForeignKey(Group ,on_delete=models.CASCADE)
     description = models.TextField()
     timestamp = models.DateTimeField(default=datetime.now())
+    photo = models.ImageField(upload_to="group_photos",default='group_photos/film.jpg')
+    fee = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
@@ -133,3 +139,7 @@ class Meetup(models.Model):
 class MeetupMemberDetails(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     meetup = models.ForeignKey(Meetup, on_delete=models.CASCADE)
+
+    def __str__(self):
+        str = "{} {}".format(self.user.email,self.meetup.name)
+        return str

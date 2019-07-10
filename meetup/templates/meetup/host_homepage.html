@@ -13,21 +13,23 @@
 {% extends 'meetup/base.html' %}
 {% block body_block %}
 <div class="container">
+<br>
 <h1 align="center">Homepage</h1>
 {% if request.user.is_authenticated%}
     <h5>Hi {{ request.user.email }}</h5>
     {% if user.is_host %}
+        <a style="display: block; margin-left: 40%; margin-right: 40%; margin-bottom: 5px" class="btn btn-success" href="{% url 'meetup:create_group_view' %}">Create Group</a>
          <div class="container">
-        <div class="well well-lg">
+
         <h1>Your Groups: </h1>
-        </div>
-        <div class="row">
+
+        <div class="row well">
         {% for group in groups %}
 
-            <div class="column">
+            <div class="column" style="margin: 2%">
     <div class="card" style="text-align: center">
         <div style="display: inline-block">
-      <img src="{{ group.photo.url }}" alt="profile-pic" style="width: 100%">
+      <img src="{{ group.photo.url }}" alt="profile-pic" style="width: 300px; height: 300px; margin: 5px">
             </div>
       <div class="container">
         <h2><a style="color: #4CAF50" href = "{% url 'meetup:group_details' group.group_id %}">{{ group.name }}</a></h2>
@@ -35,7 +37,7 @@
         <p class="title">{{ group.creator.name }}</p>
         <p>{{ group.category.interest }}</p>
         <p>{{ group.description }}</p>
-        <a href="{% url 'meetup:group_delete_view' group.group_id %}" class="btn btn-danger">Delete Group</a>
+        <a style="margin:10px" href="{% url 'meetup:group_delete_view' group.group_id %}" class="btn btn-danger">Delete Group</a>
       </div>
     </div>
   </div>
