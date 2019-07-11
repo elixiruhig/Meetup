@@ -1,20 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
     <title>Homepage</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Dancing+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Great+Vibes&display=swap" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
 </head>
 <body>
+
 {% extends 'meetup/base.html' %}
 {% block body_block %}
 <div class="container">
 <br>
-<h1 align="center">Homepage</h1>
+<div class="jumbotron" style="background-image: url('media/meetup3.jpg');">
+    <h1 style="black; font-family:'Dancing Script', cursive; font-size: 150px; line-height: 50px; font-weight: normal; margin-bottom: 10px; margin-top: 20px; text-align: center; text-shadow: 0 1px 1px #fff;" align="center">Eventify</h1>
+  </div>
 {% if request.user.is_authenticated%}
     <h5>Hi {{ request.user.email }}</h5>
     {% if user.is_host %}

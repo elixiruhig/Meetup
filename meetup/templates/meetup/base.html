@@ -18,38 +18,125 @@
 
     }
 
+    .header {
+  position: fixed;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+  background-color: #f1f1f1;
+}
+
+.header h2 {
+  text-align: center;
+}
+
+.progress-container {
+  width: 100%;
+  height: 8px;
+  background: #ccc;
+}
+
+.progress-bar {
+  height: 8px;
+  background: black;
+  width: 0%;
+}
+
+{#.content {#}
+{#  padding: 100px 0;#}
+{#  margin: 50px auto 0 auto;#}
+{#  width: 80%;#}
+{#}#}
+
+
+    .topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.topnav-right {
+  float: right;
+}
+
+.topnav-right a{
+    float: left;
+  color: #f2f2f2;
+  text-align: center;
+  text-decoration: none;
+  font-size: 17px;
+}
 </style>
 </head>
   <body>
+<div class="header">
+  <div class="progress-container">
+    <div class="progress-bar" id="myBar"></div>
+  </div>
+</div>
 
-    <nav class="navbar navbar-default sticky-top sticky well" >
-      <div class="container">
+<div class="content">
+    {% if user.is_authenticated %}
+              <div class="topnav">
+  <a class="active" href="{% url 'meetup:homeview' %}">Home</a>
+  <form style="width:80%; padding-right: 0px; margin-right: 0px" method="post">{% csrf_token %}<input style="width: 75%; margin-left: 30px; margin-top: 10px" type="text" name="search" placeholder="Type something"><input type="submit" style="margin-left: 10px" class="btn btn-success" value="Search" name="submit"></form>
+{#  <a href="#news">News</a>#}
+{#  <a href="#contact">Contact</a>#}
+
+  <div class="topnav-right">
+    <a href="{% url 'meetup:user_logout' %}">Logout</a>
+    <a href="{% url 'meetup:user_profile_view' user.user_id %}"><img src="{{ user.photo.url }}" width="25px" height="25px" style="border-radius: 50%" alt="profile-pic"></a>
+  </div>
+</div>
 
 
-{# Django Home Link / Admin Link / Register Link#}
-
-          {# Some logic on what to display for last item#}
-          {% if user.is_authenticated %}
-
-              <ul class="nav navbar-nav navbar-right">
-            <li><a style="color: white" class="navbar-link" href="{% url 'meetup:user_logout' %}">Logout</a></li>
-
-              </ul>
           {% else %}
-              <ul class="nav navbar-nav">
-            <li><a class="navbar-link" href="{% url 'meetup:register' %}">Register</a></li>
-            <li><a class="navbar-link" href="{% url 'meetup:user_login' %}">Login</a></li>
+             <div class="topnav">
+
+  <a href="{% url 'meetup:register' %}">Register</a>
+  <a href="{% url 'meetup:user_login' %}">Login</a>
+
+</div>
+
 
           {% endif %}
-
-</ul>
-      </div>
-    </nav>
 
     <br>
     <div class="container">
     {% block body_block %}
     {% endblock %}
     </div>
+</div>
+
+  <script>
+// When the user scrolls the page, execute myFunction
+window.onscroll = function() {myFunction()};
+
+function myFunction() {
+  var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+  var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  var scrolled = (winScroll / height) * 100;
+  document.getElementById("myBar").style.width = scrolled + "%";
+}
+</script>
+
   </body>
 </html>

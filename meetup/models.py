@@ -132,11 +132,20 @@ class Meetup(models.Model):
     timestamp = models.DateTimeField(default=datetime.now())
     photo = models.ImageField(upload_to="group_photos",default='group_photos/film.jpg')
     fee = models.IntegerField(default=0)
+    slots = models.IntegerField(default= 10)
 
     def __str__(self):
         return self.name
 
 class MeetupMemberDetails(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    meetup = models.ForeignKey(Meetup, on_delete=models.CASCADE)
+
+    def __str__(self):
+        str = "{} {}".format(self.user.email,self.meetup.name)
+        return str
+
+class WaitingList(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     meetup = models.ForeignKey(Meetup, on_delete=models.CASCADE)
 

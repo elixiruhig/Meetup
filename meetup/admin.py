@@ -19,7 +19,7 @@ class group_admin(admin.ModelAdmin):
 admin.site.register(Group,group_admin)
 
 class meetup_admin(admin.ModelAdmin):
-    list_display = ('name','meetup_id','host','group','photo','fee')
+    list_display = ('name','meetup_id','host','group','photo','fee','slots')
     search_fields = ('name','meetup_id','host','group')
     list_filter = ('name','meetup_id','host','group')
     ordering = ('name',)
@@ -50,7 +50,7 @@ class user_admin(UserAdmin):
     )
 
 admin.site.register(User,user_admin)
-# admin.site.register(UserManager)
+admin.site.register(WaitingList)
 admin.site.register(Interest)
 admin.site.register(GroupMemberDetails)
 admin.site.register(MeetupMemberDetails)

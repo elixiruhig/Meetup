@@ -15,6 +15,46 @@ body {
 }
 
 
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
 
 .flip-card {
   background-color: transparent;
@@ -93,14 +133,30 @@ li{
             {% else %}
             <h5 align="left">Fee: {{ meetup.fee }}</h5>
         {% endif %}
+        <h5>Slots left: {{ meetup.slots }}</h5>
     </div>
 
 <div class="container" align="center">
-        {% if not user.is_host and user not in attendees%}
+        {% if not user.is_host and user not in attendees and wait_flag == False%}
             <form method="post" action="">{% csrf_token %}<button class="btn btn-info" name="join" value="{{ meetup.meetup_id }}">Join</button></form>
         {% endif %}
         {% if user in attendees %}
             <form method="post" action="">{% csrf_token %}<button class="btn btn-danger" name="cancel" value="{{ meetup.meetup_id }}">Cancel</button></form>
+        {% endif %}
+        {% if wait_flag %}
+            <br>
+            <button id="myBtn" class="btn btn-warning">Status</button>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+    <span class="close">&times;</span>
+    <p>You are in the waiting list</p>
+  </div>
+
+</div>
         {% endif %}
 
 
@@ -132,7 +188,33 @@ li{
         </div>
 
 
+<script>
+// Get the modal
+var modal = document.getElementById("myModal");
 
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+</script>
 
 
 

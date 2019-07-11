@@ -119,8 +119,20 @@ class MeetupForm(forms.ModelForm):
         }
     ))
 
+    fee = forms.IntegerField(widget=TextInput(
+        attrs={
+            'class': 'form-control'
+        }
+    ))
+
+    slots = forms.IntegerField(widget=TextInput(
+        attrs={
+            'class': 'form-control'
+        }
+    ))
+
 
 
     class Meta:
         model = Meetup
-        fields = ('name', 'description','fee','photo')
+        fields = ('name', 'description','fee','slots','photo')
