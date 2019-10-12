@@ -15,7 +15,7 @@ class group_admin(admin.ModelAdmin):
     search_fields = ('name','group_id','creator','category')
     list_filter = ('name','group_id','creator','category')
     ordering = ('name',)
-
+	
 admin.site.register(Group,group_admin)
 
 class meetup_admin(admin.ModelAdmin):
